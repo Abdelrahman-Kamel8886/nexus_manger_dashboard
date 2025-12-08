@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/flavor/flavor.dart';
 import '../comon/footer/footer_widget.dart';
+import '../comon/header/header_widget.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -64,14 +64,24 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Header with Logo and Theme Toggle
+            const HeaderWidget(),
+            
+            // Divider between header and login form
+            Divider(
+              color: Colors.grey[300],
+              height: 1,
+              thickness: 1,
+            ),
+            
             // Main Content
             Container(
               constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height,
+                minHeight: MediaQuery.of(context).size.height - 120.h,
               ),
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 40.h),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth: 500.w,
@@ -80,58 +90,25 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        SizedBox(height: 40.h),
-                
-                // Logo Section
-                Center(
-                  child: config.logoPath.endsWith('.svg')
-                      ? SvgPicture.asset(
-                          config.logoPath,
-                          height: 120.h,
-                          width: 280.w,
-                          fit: BoxFit.contain,
-                          placeholderBuilder: (context) => Icon(
-                            Icons.business,
-                            size: 120.h,
-                            color: config.primaryColor,
+                        // Login Form Card
+                        Container(
+                          padding: EdgeInsets.all(50.w),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
-                        )
-                      : Image.asset(
-                          config.logoPath,
-                          height: 120.h,
-                          width: 280.w,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Icon(
-                              Icons.business,
-                              size: 120.h,
-                              color: config.primaryColor,
-                            );
-                          },
-                        ),
-                ),
-                
-                SizedBox(height: 60.h),
-                
-                // Login Form Card
-                Container(
-                  padding: EdgeInsets.all(50.w),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
                         // Title
                         Text(
                           'Login',
@@ -376,26 +353,23 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Colors.white,
                                     ),
                                   ),
+                                ),
+                        ),]
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                      ),
-                      
-                      SizedBox(height: 40.h),
-                    ],
-                  ),
-                ),
-              ),
+                )
             ),
-            ),
-            
-            // Footer at the end of scrollable content
-            const FooterWidget(),
-          ],
-        ),
+          ),
+          
+          // Footer at the end of scrollable content
+          const FooterWidget(),
+        ],
       ),
+    ),
     );
   }
 }
