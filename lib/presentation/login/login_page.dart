@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/di/dependency_injection.dart';
 import '../../core/flavor/flavor.dart';
 import '../comon/footer/footer_widget.dart';
 import '../comon/header/header_widget.dart';
+import 'cubit/login_cubit.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,7 +22,6 @@ class _LoginPageState extends State<LoginPage> {
   final _usernameFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   bool _obscurePassword = true;
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -37,28 +39,44 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  void _handleLogin(LoginCubit cubit) {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
-
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        context.go('/dashboard');
-      }
+      cubit.login(
+        username: _usernameController.text.trim(),
+        password: _passwordController.text,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final config = flavorConfig;
+    return BlocProvider(
+      create: (context) => DependencyInjection.getLoginCubit(),
+      child: BlocListener<LoginCubit, LoginState>(
+        listener: (context, state) {
+          if (state is LoginSuccess) {
+            context.go('/dashboard', extra: state.repositories);
+          } else if (state is LoginError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          }
+        },
+        child: Builder(
+          builder: (context) {
+            final config = flavorConfig;
+            return _buildScaffold(context, config);
+          },
+        ),
+      ),
+    );
+  }
 
+  Widget _buildScaffold(BuildContext context, dynamic config) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: SingleChildScrollView(
@@ -208,7 +226,9 @@ class _LoginPageState extends State<LoginPage> {
                           focusNode: _passwordFocusNode,
                           obscureText: _obscurePassword,
                           textInputAction: TextInputAction.done,
-                          onFieldSubmitted: (_) => _handleLogin(),
+                          onFieldSubmitted: (_) => _handleLogin(
+                            context.read<LoginCubit>(),
+                          ),
                           decoration: InputDecoration(
                             labelText: 'Password',
                             labelStyle: TextStyle(
@@ -323,38 +343,46 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(height: 40.h),
                         
                         // Login Button
-                        SizedBox(
-                          height: 56.h,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _handleLogin,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: config.buttonsColor,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.r),
-                              ),
-                              padding: EdgeInsets.zero,
-                            ),
-                            child: _isLoading
-                                ? SizedBox(
-                                    height: 24.h,
-                                    width: 24.w,
-                                    child: const CircularProgressIndicator(
-                                      strokeWidth: 2.5,
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                    ),
-                                  )
-                                : Text(
-                                    'Login',
-                                    style: TextStyle(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
+                        BlocBuilder<LoginCubit, LoginState>(
+                          builder: (context, state) {
+                            final isLoading = state is LoginLoading;
+                            return SizedBox(
+                              height: 56.h,
+                              child: ElevatedButton(
+                                onPressed: isLoading
+                                    ? null
+                                    : () => _handleLogin(context.read<LoginCubit>()),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: config.buttonsColor,
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4.r),
                                   ),
+                                  padding: EdgeInsets.zero,
                                 ),
-                        ),]
+                                child: isLoading
+                                    ? SizedBox(
+                                        height: 24.h,
+                                        width: 24.w,
+                                        child: const CircularProgressIndicator(
+                                          strokeWidth: 2.5,
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        ),
+                                      )
+                                    : Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                             ),
                           ),
                         ),
