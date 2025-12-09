@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../core/constants.dart';
-import '../dto/repos_dto.dart';
+import '../model/repos_model.dart';
 
 class RemoteService {
 

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../../domain/entity/repository_navigation_entity.dart';
+import 'package:nexus_manger_dashboard/domain/entity/repos_entity.dart';
 import '../../../domain/usecases/get_repositories_usecase.dart';
 
 part 'login_state.dart';
@@ -24,7 +24,7 @@ class LoginCubit extends Cubit<LoginState> {
 
       // Convert Repos to RepositoryNavigationEntity (only name and url)
       final repositories = repos
-          .map((repo) => RepositoryNavigationEntity(
+          .map((repo) => RepoEntity(
                 name: repo.name,
                 url: repo.url,
               ))

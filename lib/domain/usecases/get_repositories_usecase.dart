@@ -6,7 +6,7 @@ class GetRepositoriesUseCase {
 
   GetRepositoriesUseCase(this.repository);
 
-  Future<List<Repos>> call({
+  Future<List<RepoEntity>> call({
     required String username,
     required String password,
   }) async {

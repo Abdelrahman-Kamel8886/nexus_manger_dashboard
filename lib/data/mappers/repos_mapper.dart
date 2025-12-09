@@ -1,19 +1,15 @@
-import '../remote/dto/repos_dto.dart';
 import '../../domain/entity/repos_entity.dart';
+import '../remote/model/repos_model.dart';
 
 class ReposMapper {
-  static Repos toEntity(ReposDto dto) {
-    return Repos(
+  static RepoEntity toEntity(ReposDto dto) {
+    return RepoEntity(
       name: dto.name,
-      format: dto.format,
-      type: dto.type,
       url: dto.url,
-      size: dto.size,
-      attributes: dto.attributes,
     );
   }
 
-  static List<Repos> toEntityList(List<ReposDto> dtos) {
+  static List<RepoEntity> toEntityList(List<ReposDto> dtos) {
     return dtos.map((dto) => toEntity(dto)).toList();
   }
 }

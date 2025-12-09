@@ -9,7 +9,7 @@ class RepositoryImpl implements Repository {
   RepositoryImpl(this._service);
 
   @override
-  Future<List<Repos>> getRepositories({
+  Future<List<RepoEntity>> getRepositories({
     required String username,
     required String password,
   }) async {

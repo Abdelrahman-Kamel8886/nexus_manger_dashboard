@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:nexus_manger_dashboard/presentation/router/app_router.dart';
 import 'core/flavor/flavor.dart';
+import 'core/router/app_router.dart';
 
 
 void main() {
