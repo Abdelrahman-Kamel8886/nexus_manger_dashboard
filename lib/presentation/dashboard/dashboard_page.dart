@@ -6,7 +6,7 @@ import '../../core/flavor/flavor.dart';
 import '../../core/filters/filter_enums.dart';
 import '../../core/flavor/flavor_config.dart';
 import '../comon/footer/footer_widget.dart';
-import '../comon/header/dashboard_header_widget.dart';
+import 'widgets/dashboard_header_widget.dart';
 
 class DashboardPage extends StatefulWidget {
   final List<LoginEntity> repositories;
@@ -21,6 +21,15 @@ class _DashboardPageState extends State<DashboardPage> {
   final TextEditingController _searchController = TextEditingController();
   PlatformFilter _selectedPlatformFilter = PlatformFilter.all;
   BuildFilter _selectedBuildFilter = BuildFilter.all;
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to search controller changes to trigger rebuild
+    _searchController.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   void dispose() {
@@ -45,23 +54,6 @@ class _DashboardPageState extends State<DashboardPage> {
     }).toList();
   }
 
-  Future<void> _navigateToRepository(LoginEntity repository) async {
-    if (repository.url.isNotEmpty) {
-      final uri = Uri.parse(repository.url);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Could not open ${repository.url}'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +67,6 @@ class _DashboardPageState extends State<DashboardPage> {
           // Dashboard Header with search
           DashboardHeaderWidget(
             searchController: _searchController,
-            title: 'Repositories',
           ),
 
           // Scrollable Content
@@ -102,7 +93,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
 
-                  SizedBox(height: 24.h),
 
                   // Filters
                   Padding(
@@ -194,76 +184,88 @@ class _DashboardPageState extends State<DashboardPage> {
 
                   // Repositories Grid
                   filteredRepos.isEmpty
-                      ? Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(40.h),
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.search_off,
-                                  size: 64.sp,
-                                  color: Colors.grey[400],
-                                ),
-                                SizedBox(height: 16.h),
-                                Text(
-                                  'No repositories found',
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    color: Colors.grey[500],
-                                    fontWeight: FontWeight.w500,
+                      ? Column(
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(40.h),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.search_off,
+                                        size: 64.sp,
+                                        color: Colors.grey[400],
+                                      ),
+                                      SizedBox(height: 16.h),
+                                      Text(
+                                        'No repositories found',
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          color: Colors.grey[500],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.h),
+                                      Text(
+                                        'Try adjusting your search or filters',
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: Colors.grey[400],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                SizedBox(height: 8.h),
-                                Text(
-                                  'Try adjusting your search or filters',
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    color: Colors.grey[400],
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
+                            // Footer
+                            const FooterWidget(),
+                          ],
                         )
-                      : LayoutBuilder(
-                          builder: (context, constraints) {
-                            // Calculate crossAxisCount based on screen width
-                            final crossAxisCount = constraints.maxWidth > 1200
-                                ? 4
-                                : constraints.maxWidth > 800
-                                ? 3
-                                : constraints.maxWidth > 600
-                                ? 2
-                                : 1;
+                      : Column(
+                          children: [
+                            LayoutBuilder(
+                              builder: (context, constraints) {
+                                // Calculate crossAxisCount based on screen width
+                                final crossAxisCount = constraints.maxWidth > 1200
+                                    ? 4
+                                    : constraints.maxWidth > 800
+                                    ? 3
+                                    : constraints.maxWidth > 600
+                                    ? 2
+                                    : 1;
 
-                            return GridView.builder(
-                              padding:EdgeInsets.symmetric(horizontal: 40.w),
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: crossAxisCount,
-                                    crossAxisSpacing: 20.w,
-                                    mainAxisSpacing: 20.h,
-                                    childAspectRatio: 1.2,
-                                  ),
-                              itemCount: filteredRepos.length,
-                              itemBuilder: (context, index) {
-                                final repo = filteredRepos[index];
-                                return _RepositoryCard(
-                                  repository: repo,
-                                  config: config,
-                                  onTap: () => _navigateToRepository(repo),
+                                return GridView.builder(
+                                  padding: EdgeInsets.symmetric(horizontal: 40.w),
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: crossAxisCount,
+                                        crossAxisSpacing: 20.w,
+                                        mainAxisSpacing: 20.h,
+                                        childAspectRatio: 1.2,
+                                      ),
+                                  itemCount: filteredRepos.length,
+                                  itemBuilder: (context, index) {
+                                    final repo = filteredRepos[index];
+                                    return _RepositoryCard(
+                                      repository: repo,
+                                      config: config,
+                                      onTap: () => {},
+                                    );
+                                  },
                                 );
                               },
-                            );
-                          },
+                            ),
+                            SizedBox(height: 40.h),
+                            // Footer
+                            const FooterWidget(),
+                          ],
                         ),
-
-                  SizedBox(height: 40.h),
-
-                  // Footer
-                  const FooterWidget(),
                 ],
               ),
             ),

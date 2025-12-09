@@ -22,8 +22,24 @@ class LoginRepositoryImpl implements LoginRepository {
 
   @override
   String concatUsername(String username) {
-    const envUsername = String.fromEnvironment('USERNAME', defaultValue: '');
-    return envUsername.isNotEmpty ? '$envUsername-$username' : username;
+    if(username.toLowerCase().contains("secon")){
+      const  envUsername = String.fromEnvironment('SECON', defaultValue: '');
+      return envUsername.isNotEmpty ? '$envUsername-$username' : username;
+    }
+    else if(username.toLowerCase().contains("partial")){
+      const  envUsername = String.fromEnvironment('PARTIAL', defaultValue: '');
+      return envUsername.isNotEmpty ? '$envUsername-$username' : username;
+    }
+    else if(username.toLowerCase().contains("production")){
+      const envUsername = String.fromEnvironment('PRODUCTION', defaultValue: '');
+      return envUsername.isNotEmpty ? '$envUsername-$username' : username;
+    }
+    else{
+      const envUsername = String.fromEnvironment('USERNAME', defaultValue: '');
+      return envUsername.isNotEmpty ? '$envUsername-$username' : username;
+    }
+
+
   }
 }
 

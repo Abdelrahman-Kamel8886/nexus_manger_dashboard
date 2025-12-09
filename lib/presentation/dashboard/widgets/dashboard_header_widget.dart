@@ -7,12 +7,10 @@ import '../../../core/storage/secure_storage_manager.dart';
 
 class DashboardHeaderWidget extends StatefulWidget {
   final TextEditingController? searchController;
-  final String title;
 
   const DashboardHeaderWidget({
     super.key,
     this.searchController,
-    this.title = 'Repositories',
   });
 
   @override
@@ -22,6 +20,7 @@ class DashboardHeaderWidget extends StatefulWidget {
 class _DashboardHeaderWidgetState extends State<DashboardHeaderWidget> {
   String? _username;
   bool _isLoading = true;
+  bool _isDarkMode = false;
 
   @override
   void initState() {
@@ -70,7 +69,7 @@ class _DashboardHeaderWidgetState extends State<DashboardHeaderWidget> {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.h),
+      padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 16.h),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -81,23 +80,23 @@ class _DashboardHeaderWidgetState extends State<DashboardHeaderWidget> {
           ),
         ],
       ),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Top row: Logo, Title, Account
+          // Logo and Title
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Logo
               config.logoPath.endsWith('.svg')
                   ? SvgPicture.asset(
                       config.logoPath,
-                      height: 50.h,
-                      width: 180.w,
+                      height: 40.h,
+                      width: 150.w,
                       fit: BoxFit.contain,
                       placeholderBuilder: (context) => Icon(
                         Icons.business,
-                        size: 50.h,
+                        size: 40.h,
                         color: config.primaryColor,
                       ),
                     )
@@ -115,31 +114,106 @@ class _DashboardHeaderWidgetState extends State<DashboardHeaderWidget> {
                       },
                     ),
 
-              // Title
-              Expanded(
-                child: Center(
-                  child: Text(
-                    widget.title,
-                    style: TextStyle(
-                      fontSize: 28.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[900],
-                    ),
-                  ),
+              SizedBox(width: 16.w),
+
+              // Title from flavor config
+              Text(
+                config.appTitle,
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[900],
                 ),
               ),
+            ],
+          ),
 
+          // Search bar, Theme Toggle and Account
+          Row(
+            children: [
+              // Search bar (smaller width)
+              if (widget.searchController != null) ...[
+                SizedBox(
+                  width: 400.w,
+                  height: 50.h,
+                  child: TextField(
+                    controller: widget.searchController,
+                    style: TextStyle(fontSize: 14.sp),
+                    decoration: InputDecoration(
+                      hintText: 'Search repositories...',
+                      hintStyle: TextStyle(fontSize: 14.sp),
+                      prefixIcon: Icon(Icons.search, size: 18.sp, color: Colors.grey[600]),
+                      suffixIcon: widget.searchController!.text.isNotEmpty
+                          ? IconButton(
+                              icon: Icon(Icons.clear, size: 16.sp, color: Colors.grey[600]),
+                              onPressed: () {
+                                setState(() {
+                                  widget.searchController!.clear();
+                                });
+                              },
+                              padding: EdgeInsets.zero,
+                              constraints: BoxConstraints(),
+                            )
+                          : null,
+                      filled: true,
+                      fillColor: Colors.grey[50],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                        borderSide: BorderSide(color: config.primaryColor, width: 2),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 8.h,
+                      ),
+                      isDense: true,
+                    ),
+                    onChanged: (_) {
+                      // Update header state for clear button visibility
+                      setState(() {});
+                      // The listener in dashboard page will handle the rebuild
+                    },
+                  ),
+                ),
+                SizedBox(width: 12.w),
+              ],
+              
+              // Theme Toggle
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isDarkMode = !_isDarkMode;
+                    // TODO: Implement theme switching
+                  });
+                },
+                icon: Icon(
+                  _isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                  size: 24.sp,
+                  color: Colors.grey[700],
+                ),
+                tooltip: _isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode',
+              ),
+              
+              SizedBox(width: 8.w),
+              
               // Account Icon with Menu
               PopupMenuButton<String>(
                 icon: Container(
-                  padding: EdgeInsets.all(8.w),
+                  padding: EdgeInsets.all(6.w),
                   decoration: BoxDecoration(
                     color: config.primaryColor.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.account_circle,
-                    size: 32.sp,
+                    size: 28.sp,
                     color: config.primaryColor,
                   ),
                 ),
@@ -200,47 +274,6 @@ class _DashboardHeaderWidgetState extends State<DashboardHeaderWidget> {
               ),
             ],
           ),
-
-          SizedBox(height: 20.h),
-
-          // Search Bar
-          if (widget.searchController != null)
-            TextField(
-              controller: widget.searchController,
-              decoration: InputDecoration(
-                hintText: 'Search repositories...',
-                prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
-                suffixIcon: widget.searchController!.text.isNotEmpty
-                    ? IconButton(
-                        icon: Icon(Icons.clear, color: Colors.grey[600]),
-                        onPressed: () {
-                          setState(() {
-                            widget.searchController!.clear();
-                          });
-                        },
-                      )
-                    : null,
-                filled: true,
-                fillColor: Colors.grey[50],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: config.primaryColor, width: 2),
-                ),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 20.w,
-                  vertical: 16.h,
-                ),
-              ),
-              onChanged: (_) => setState(() {}),
-            ),
         ],
       ),
     );
