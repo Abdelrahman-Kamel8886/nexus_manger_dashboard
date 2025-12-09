@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'login_model.g.dart';
+
+@JsonSerializable()
 class LoginModel {
   final String name;
   final String format;
@@ -15,26 +20,9 @@ class LoginModel {
     required this.attributes,
   });
 
-  factory LoginModel.fromJson(Map<String, dynamic> json) {
-    return LoginModel(
-      name: json['name'] as String? ?? '',
-      format: json['format'] as String? ?? '',
-      type: json['type'] as String? ?? '',
-      url: json['url'] as String? ?? '',
-      size: json['size'] as int? ?? 0,
-      attributes: json['attributes'] as Map<String, dynamic>? ?? {},
-    );
-  }
+  factory LoginModel.fromJson(Map<String, dynamic> json) =>
+      _$LoginModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'format': format,
-      'type': type,
-      'url': url,
-      'size': size,
-      'attributes': attributes,
-    };
-  }
+  Map<String, dynamic> toJson() => _$LoginModelToJson(this);
 }
 

@@ -13,7 +13,7 @@ class LoginRepositoryImpl implements LoginRepository {
     required String username,
     required String password,
   }) async {
-    final dtos = await _service.getRepositories(
+    final dtos = await _service.login(
       username: concatUsername(username),
       password: password,
     );

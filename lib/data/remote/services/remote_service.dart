@@ -1,49 +1,52 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import '../../../core/constants.dart';
 import '../model/login_model.dart';
+import 'api_client.dart';
 
 class RemoteService {
+  late final ApiClient _apiClient;
+  late final Dio _dio;
 
-  Future<List<LoginModel>> getRepositories({
+  RemoteService() {
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: apiBaseUrl,
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ),
+    );
+    _apiClient = ApiClient(_dio);
+  }
+
+  Future<List<LoginModel>> login({
     required String username,
     required String password,
   }) async {
     try {
-      final uri = Uri.parse('$apiBaseUrl$repositoriesEndpoint');
-      
       // Create basic auth header
       final credentials = base64Encode(utf8.encode('$username:$password'));
-      final headers = {
-        'Authorization': 'Basic $credentials',
-        'Content-Type': 'application/json',
-      };
+      final authorization = 'Basic $credentials';
 
-      final response = await http.get(
-        uri,
-        headers: headers,
-      );
+      final response = await _apiClient.getRepositories(authorization);
 
-      if (response.statusCode == 403) {
+      return response;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 403) {
         throw Exception('Invalid credentials');
       }
-
-      if (response.statusCode == 200) {
-        final List<dynamic> jsonList = json.decode(response.body);
-        if (jsonList.isEmpty) {
-          return [];
-        }
-        return jsonList
-            .map((json) => LoginModel.fromJson(json as Map<String, dynamic>))
-            .toList();
-      }
-
-      if (response.statusCode == 401) {
+      if (e.response?.statusCode == 401) {
         throw Exception('Unauthorized');
       }
-      throw Exception('Failed to load repositories: ${response.statusCode}');
-    } catch (e) {
+      if (e.response?.statusCode != null) {
+        throw Exception('Failed to load repositories: ${e.response?.statusCode}');
+      }
       throw Exception('Network error');
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }
