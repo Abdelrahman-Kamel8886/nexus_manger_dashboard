@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 enum Flavor {
   fawry,
-  qnb;
+  qnb,
+  we;
 
   FlavorConfig get config {
     switch (this) {
@@ -10,6 +11,8 @@ enum Flavor {
         return FlavorConfig.fawry();
       case Flavor.qnb:
         return FlavorConfig.qnb();
+      case Flavor.we:
+        return FlavorConfig.we();
     }
   }
 
@@ -20,13 +23,14 @@ enum Flavor {
         return Flavor.fawry;
       case 'qnb':
         return Flavor.qnb;
+      case 'we':
+        return Flavor.we;
       default:
         return null;
     }
   }
 }
 
-/// Configuration class for app flavors
 class FlavorConfig {
   final String name;
   final Color primaryColor;
@@ -35,8 +39,6 @@ class FlavorConfig {
   final Color? buttonsColor;
   final Color? footerColor;
   final Color? footerTextColor;
-  final String? apiBaseUrl;
-  final String? appId;
   final String logoPath;
 
   const FlavorConfig({
@@ -48,11 +50,8 @@ class FlavorConfig {
     this.buttonsColor,
     this.footerColor,
     this.footerTextColor,
-    this.apiBaseUrl,
-    this.appId,
   });
 
-  /// Fawry flavor configuration
   factory FlavorConfig.fawry() {
     return const FlavorConfig(
       name: 'fawry',
@@ -63,28 +62,34 @@ class FlavorConfig {
       buttonsColor: Color(0xFF007BFF),
       footerColor: Color(0xFF00699C),
       footerTextColor: Colors.white,
-      apiBaseUrl: 'https://api.fawry.com',
-      appId: 'com.fawry.dashboard',
     );
   }
 
-  /// QNB flavor configuration
   factory FlavorConfig.qnb() {
     return const FlavorConfig(
       name: 'qnb',
-      primaryColor: Color(0xFF870052), // QNB red
+      primaryColor: Color(0xFF870052),
       appTitle: 'QNB Wallet Manger Dashboard',
       logoPath: 'assets/qnb_logo.png',
       secondaryColor: Color(0xFFB8142A),
       buttonsColor: Color(0xFF870052),
       footerColor: Color(0xFF870052),
       footerTextColor: Colors.white,
-      apiBaseUrl: 'https://api.qnb.com',
-      appId: 'com.qnb.dashboard',
+    );
+  }
+  factory FlavorConfig.we() {
+    return const FlavorConfig(
+      name: 'we',
+      primaryColor: Color(0xFF5C2D91),
+      appTitle: 'WE Wallet Manager Dashboard',
+      logoPath: 'assets/we_logo.png',
+      secondaryColor: Color(0xFF004499),
+      buttonsColor: Color(0xFF5C2D91),
+      footerColor: Color(0xFF5C2D91),
+      footerTextColor: Colors.white,
     );
   }
 
-  /// Get theme data based on flavor configuration
   ThemeData get themeData {
     return ThemeData(
       colorScheme: ColorScheme.fromSeed(
