@@ -15,3 +15,4 @@ abstract class ApiClient {
     @Header('Authorization') String authorization,
   );
 }
+

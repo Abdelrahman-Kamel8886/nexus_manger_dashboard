@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:nexus_manger_dashboard/domain/entity/login_entity.dart';
 import '../../../domain/usecases/login_usecase.dart';
+import '../../../core/storage/secure_storage_manager.dart';
 
 part 'login_state.dart';
 
@@ -29,6 +30,9 @@ class LoginCubit extends Cubit<LoginState> {
                 url: repo.url,
               ))
           .toList();
+
+      // Save username securely
+      await SecureStorageManager.saveUsername(username);
 
       emit(LoginSuccess(repositories: repositories));
     } on Exception catch (e) {
