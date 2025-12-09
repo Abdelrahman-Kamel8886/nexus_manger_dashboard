@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../core/constants.dart';
-import '../model/repos_model.dart';
+import '../model/login_model.dart';
 
 class RemoteService {
 
-  Future<List<ReposDto>> getRepositories({
+  Future<List<LoginModel>> getRepositories({
     required String username,
     required String password,
   }) async {
@@ -34,20 +34,16 @@ class RemoteService {
           return [];
         }
         return jsonList
-            .map((json) => ReposDto.fromJson(json as Map<String, dynamic>))
+            .map((json) => LoginModel.fromJson(json as Map<String, dynamic>))
             .toList();
       }
 
       if (response.statusCode == 401) {
         throw Exception('Unauthorized');
       }
-
       throw Exception('Failed to load repositories: ${response.statusCode}');
     } catch (e) {
-      if (e is Exception) {
-        rethrow;
-      }
-      throw Exception('Network error: $e');
+      throw Exception('Network error');
     }
   }
 }

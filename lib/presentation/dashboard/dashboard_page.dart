@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:nexus_manger_dashboard/domain/entity/repos_entity.dart';
+import 'package:nexus_manger_dashboard/domain/entity/login_entity.dart';
 import '../../core/flavor/flavor.dart';
 import '../comon/footer/footer_widget.dart';
 
 class DashboardPage extends StatelessWidget {
-  final List<RepoEntity> repositories;
+  final List<LoginEntity> repositories;
 
   const DashboardPage({
     super.key,

@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-class RepoEntity extends Equatable {
+class LoginEntity extends Equatable {
   final String name;
   final String url;
 
 
-  const RepoEntity({
+  const LoginEntity({
     required this.name,
     required this.url,
   });

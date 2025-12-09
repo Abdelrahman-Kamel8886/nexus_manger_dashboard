@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:nexus_manger_dashboard/domain/entity/repos_entity.dart';
+import 'package:nexus_manger_dashboard/domain/entity/login_entity.dart';
 import '../../presentation/dashboard/dashboard_page.dart';
 import '../../presentation/login/login_page.dart';
 
@@ -16,7 +16,7 @@ class AppRouter {
         path: '/dashboard',
         name: 'dashboard',
         builder: (context, state) {
-          final repositories = state.extra as List<RepoEntity>? ?? [];
+          final repositories = state.extra as List<LoginEntity>? ?? [];
           return DashboardPage(repositories: repositories);
         },
       ),

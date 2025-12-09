@@ -12,7 +12,7 @@ class LoginInitial extends LoginState {}
 class LoginLoading extends LoginState {}
 
 class LoginSuccess extends LoginState {
-  final List<RepoEntity> repositories;
+  final List<LoginEntity> repositories;
 
   const LoginSuccess({required this.repositories});
 

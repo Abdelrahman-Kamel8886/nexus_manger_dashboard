@@ -1,14 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:nexus_manger_dashboard/domain/entity/repos_entity.dart';
-import '../../../domain/usecases/get_repositories_usecase.dart';
+import 'package:nexus_manger_dashboard/domain/entity/login_entity.dart';
+import '../../../domain/usecases/login_usecase.dart';
 
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  final GetRepositoriesUseCase getRepositoriesUseCase;
+  final LoginUseCase loginUseCase;
 
-  LoginCubit(this.getRepositoriesUseCase) : super(LoginInitial());
+  LoginCubit(this.loginUseCase) : super(LoginInitial());
 
   Future<void> login({
     required String username,
@@ -17,14 +17,14 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
 
     try {
-      final repos = await getRepositoriesUseCase(
+      final repos = await loginUseCase(
         username: username,
         password: password,
       );
 
       // Convert Repos to RepositoryNavigationEntity (only name and url)
       final repositories = repos
-          .map((repo) => RepoEntity(
+          .map((repo) => LoginEntity(
                 name: repo.name,
                 url: repo.url,
               ))

@@ -1,4 +1,4 @@
-class ReposDto {
+class LoginModel {
   final String name;
   final String format;
   final String type;
@@ -6,7 +6,7 @@ class ReposDto {
   final int size;
   final Map<String, dynamic> attributes;
 
-  ReposDto({
+  LoginModel({
     required this.name,
     required this.format,
     required this.type,
@@ -15,8 +15,8 @@ class ReposDto {
     required this.attributes,
   });
 
-  factory ReposDto.fromJson(Map<String, dynamic> json) {
-    return ReposDto(
+  factory LoginModel.fromJson(Map<String, dynamic> json) {
+    return LoginModel(
       name: json['name'] as String? ?? '',
       format: json['format'] as String? ?? '',
       type: json['type'] as String? ?? '',
