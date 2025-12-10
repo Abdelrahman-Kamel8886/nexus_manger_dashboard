@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 enum Flavor {
   fawry,
   qnb,
+  nbe,
   we;
 
   FlavorConfig get config {
@@ -13,6 +14,8 @@ enum Flavor {
         return FlavorConfig.qnb();
       case Flavor.we:
         return FlavorConfig.we();
+      case Flavor.nbe:
+        return FlavorConfig.nbe();
     }
   }
 
@@ -25,6 +28,8 @@ enum Flavor {
         return Flavor.qnb;
       case 'we':
         return Flavor.we;
+      case 'nbe':
+        return Flavor.nbe;
       default:
         return null;
     }
@@ -56,7 +61,7 @@ class FlavorConfig {
     return const FlavorConfig(
       name: 'fawry',
       primaryColor: Color(0xFFFFD400),
-      appTitle: 'Nexus Manger Dashboard',
+      appTitle: 'Nexus Manger',
       logoPath: 'assets/fawry_logo.png',
       secondaryColor: Color(0xFF007BFF),
       buttonsColor: Color(0xFF007BFF),
@@ -69,7 +74,7 @@ class FlavorConfig {
     return const FlavorConfig(
       name: 'qnb',
       primaryColor: Color(0xFF870052),
-      appTitle: 'QNB Wallet Manger Dashboard',
+      appTitle: 'E-Wallet Manger',
       logoPath: 'assets/qnb_logo.png',
       secondaryColor: Color(0xFFB8142A),
       buttonsColor: Color(0xFF870052),
@@ -77,11 +82,25 @@ class FlavorConfig {
       footerTextColor: Colors.white,
     );
   }
+
+  factory FlavorConfig.nbe() {
+    return const FlavorConfig(
+      name: 'nbe',
+      primaryColor: Color(0xFF00643E),
+      appTitle: 'PhoneCash Manger',
+      logoPath: 'assets/nbe_logo.png',
+      secondaryColor: Color(0xFFB8142A),
+      buttonsColor: Color(0xFFFFA100),
+      footerColor: Color(0xFF00643E),
+      footerTextColor: Colors.white,
+    );
+  }
+
   factory FlavorConfig.we() {
     return const FlavorConfig(
       name: 'we',
       primaryColor: Color(0xFF5C2D91),
-      appTitle: 'WE Wallet Manager Dashboard',
+      appTitle: 'WE Pay Manager',
       logoPath: 'assets/we_logo.png',
       secondaryColor: Color(0xFF004499),
       buttonsColor: Color(0xFF5C2D91),
