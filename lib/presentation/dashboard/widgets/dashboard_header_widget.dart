@@ -37,29 +37,9 @@ class _DashboardHeaderWidgetState extends State<DashboardHeaderWidget> {
   }
 
   Future<void> _handleLogout() async {
-    final shouldLogout = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
-    );
-
-    if (shouldLogout == true) {
-      await SecureStorageManager.clearUsername();
-      if (mounted) {
-        context.go('/login');
-      }
+    await SecureStorageManager.clearUsername();
+    if (mounted) {
+      context.go('/login');
     }
   }
 
@@ -204,59 +184,79 @@ class _DashboardHeaderWidgetState extends State<DashboardHeaderWidget> {
               SizedBox(width: 8.w),
               
               // Account Icon with Menu
-              PopupMenuButton<String>(
-                icon: Container(
-                  padding: EdgeInsets.all(6.w),
-                  decoration: BoxDecoration(
-                    color: config.primaryColor.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.account_circle,
-                    size: 28.sp,
-                    color: config.primaryColor,
-                  ),
+              Theme(
+                data: Theme.of(context).copyWith(
+                  highlightColor: Colors.grey[200],
+                  splashColor: Colors.grey[200],
                 ),
-                onSelected: (value) {
-                  if (value == 'logout') {
-                    _handleLogout();
-                  }
-                },
-                itemBuilder: (context) => [
+                child: PopupMenuButton<String>(
+                  offset: Offset(0, 50.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  elevation: 8,
+                  color: Colors.white,
+                  icon: Container(
+                    padding: EdgeInsets.all(6.w),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.account_circle,
+                      size: 28.sp,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  onSelected: (value) {
+                    if (value == 'logout') {
+                      _handleLogout();
+                    }
+                  },
+                  itemBuilder: (context) => [
+                  // User Info Header
                   PopupMenuItem(
                     enabled: false,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'User',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: Colors.grey[600],
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.person,
+                            size: 24.sp,
+                            color: Colors.black,
                           ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          _isLoading
-                              ? 'Loading...'
-                              : _username ?? 'Guest',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[900],
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _isLoading
+                                      ? 'Loading...'
+                                      : _username ?? 'Guest',
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[900],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const PopupMenuDivider(),
+                  // Logout Option
                   PopupMenuItem(
                     value: 'logout',
                     child: Row(
                       children: [
                         Icon(
                           Icons.logout,
-                          size: 20.sp,
+                          size: 24.sp,
                           color: Colors.red[600],
                         ),
                         SizedBox(width: 12.w),
@@ -265,12 +265,14 @@ class _DashboardHeaderWidgetState extends State<DashboardHeaderWidget> {
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.red[600],
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ],
+                ),
               ),
             ],
           ),
