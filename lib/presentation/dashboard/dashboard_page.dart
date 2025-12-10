@@ -7,6 +7,7 @@ import '../../core/filters/filter_enums.dart';
 import '../../core/flavor/flavor_config.dart';
 import '../comon/footer/footer_widget.dart';
 import 'widgets/dashboard_header_widget.dart';
+import 'widgets/dashboard_filters_widget.dart';
 import 'widgets/repository_card_widget.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -76,109 +77,22 @@ class _DashboardPageState extends State<DashboardPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Count
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40.w , vertical: 20.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          '${filteredRepos.length} / ${widget.repositories.length}',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-
-                  // Filters
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40.w , vertical: 20.h),
-                    child: Row(
-                      children: [
-                        // Platform Filter
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(color: Colors.grey[300]!),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<PlatformFilter>(
-                                value: _selectedPlatformFilter,
-                                isExpanded: true,
-                                icon: Icon(
-                                  Icons.filter_list,
-                                  color: Colors.grey[600],
-                                ),
-                                items: PlatformFilter.values.map((filter) {
-                                  return DropdownMenuItem<PlatformFilter>(
-                                    value: filter,
-                                    child: Text(
-                                      filter.displayName,
-                                      style: TextStyle(fontSize: 14.sp),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      _selectedPlatformFilter = value;
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(width: 16.w),
-
-                        // Build Filter
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(color: Colors.grey[300]!),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<BuildFilter>(
-                                value: _selectedBuildFilter,
-                                isExpanded: true,
-                                icon: Icon(
-                                  Icons.filter_list,
-                                  color: Colors.grey[600],
-                                ),
-                                items: BuildFilter.values.map((filter) {
-                                  return DropdownMenuItem<BuildFilter>(
-                                    value: filter,
-                                    child: Text(
-                                      filter.displayName,
-                                      style: TextStyle(fontSize: 14.sp),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    setState(() {
-                                      _selectedBuildFilter = value;
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  // Filters and Count Widget
+                  DashboardFiltersWidget(
+                    filteredCount: filteredRepos.length,
+                    totalCount: widget.repositories.length,
+                    selectedPlatformFilter: _selectedPlatformFilter,
+                    selectedBuildFilter: _selectedBuildFilter,
+                    onPlatformFilterChanged: (value) {
+                      setState(() {
+                        _selectedPlatformFilter = value;
+                      });
+                    },
+                    onBuildFilterChanged: (value) {
+                      setState(() {
+                        _selectedBuildFilter = value;
+                      });
+                    },
                   ),
 
                   SizedBox(height: 30.h),
