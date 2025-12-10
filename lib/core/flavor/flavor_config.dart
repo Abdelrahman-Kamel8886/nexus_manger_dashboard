@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 enum Flavor {
   fawry,
+  adcb,
+  bm,
   qnb,
   nbe,
   we;
@@ -16,6 +18,10 @@ enum Flavor {
         return FlavorConfig.we();
       case Flavor.nbe:
         return FlavorConfig.nbe();
+      case Flavor.adcb:
+        return FlavorConfig.adcb();
+      case Flavor.bm:
+        return FlavorConfig.bm();
     }
   }
 
@@ -30,6 +36,10 @@ enum Flavor {
         return Flavor.we;
       case 'nbe':
         return Flavor.nbe;
+      case 'adcb':
+        return Flavor.adcb;
+      case 'bm':
+        return Flavor.bm;
       default:
         return null;
     }
@@ -62,10 +72,23 @@ class FlavorConfig {
       name: 'fawry',
       primaryColor: Color(0xFFFFD400),
       appTitle: 'Nexus Manger',
-      logoPath: 'assets/fawry_logo.png',
-      secondaryColor: Color(0xFF007BFF),
+      logoPath: 'assets/fawry.png',
+      secondaryColor: Color(0xFF00699C),
       buttonsColor: Color(0xFF007BFF),
       footerColor: Color(0xFF00699C),
+      footerTextColor: Colors.white,
+    );
+  }
+
+  factory FlavorConfig.adcb() {
+    return const FlavorConfig(
+      name: 'adcb',
+      primaryColor: Color(0xFFCC3366),
+      appTitle: 'Wa2ty Manger',
+      logoPath: 'assets/banks/adcb.png',
+      secondaryColor: Color(0xFF333F48),
+      buttonsColor: Color(0xFFCC3366),
+      footerColor: Color(0xFF333F48),
       footerTextColor: Colors.white,
     );
   }
@@ -75,10 +98,23 @@ class FlavorConfig {
       name: 'qnb',
       primaryColor: Color(0xFF870052),
       appTitle: 'E-Wallet Manger',
-      logoPath: 'assets/qnb_logo.png',
+      logoPath: 'assets/banks/qnb.png',
       secondaryColor: Color(0xFFB8142A),
       buttonsColor: Color(0xFF870052),
       footerColor: Color(0xFF870052),
+      footerTextColor: Colors.white,
+    );
+  }
+
+  factory FlavorConfig.bm() {
+    return const FlavorConfig(
+      name: 'bm',
+      primaryColor: Color(0xFF871E35),
+      appTitle: 'BM Wallet Manger',
+      logoPath: 'assets/banks/bm.png',
+      secondaryColor: Color(0xFF2E2E2E),
+      buttonsColor: Color(0xFF871E35),
+      footerColor: Color(0xFF2E2E2E),
       footerTextColor: Colors.white,
     );
   }
@@ -88,7 +124,7 @@ class FlavorConfig {
       name: 'nbe',
       primaryColor: Color(0xFF00643E),
       appTitle: 'PhoneCash Manger',
-      logoPath: 'assets/nbe_logo.png',
+      logoPath: 'assets/banks/nbe.png',
       secondaryColor: Color(0xFFB8142A),
       buttonsColor: Color(0xFFFFA100),
       footerColor: Color(0xFF00643E),
@@ -101,7 +137,7 @@ class FlavorConfig {
       name: 'we',
       primaryColor: Color(0xFF5C2D91),
       appTitle: 'WE Pay Manager',
-      logoPath: 'assets/we_logo.png',
+      logoPath: 'assets/banks/we.png',
       secondaryColor: Color(0xFF004499),
       buttonsColor: Color(0xFF5C2D91),
       footerColor: Color(0xFF5C2D91),
