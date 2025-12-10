@@ -7,6 +7,7 @@ import '../../core/filters/filter_enums.dart';
 import '../../core/flavor/flavor_config.dart';
 import '../comon/footer/footer_widget.dart';
 import 'widgets/dashboard_header_widget.dart';
+import 'widgets/repository_card_widget.dart';
 
 class DashboardPage extends StatefulWidget {
   final List<LoginEntity> repositories;
@@ -252,7 +253,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   itemCount: filteredRepos.length,
                                   itemBuilder: (context, index) {
                                     final repo = filteredRepos[index];
-                                    return _RepositoryCard(
+                                    return RepositoryCardWidget(
                                       repository: repo,
                                       config: config,
                                       onTap: () => {},
@@ -271,102 +272,6 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _RepositoryCard extends StatelessWidget {
-  final LoginEntity repository;
-  final FlavorConfig config;
-  final VoidCallback onTap;
-
-  const _RepositoryCard({
-    required this.repository,
-    required this.config,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12.r),
-      child: Container(
-        padding: EdgeInsets.all(20.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-          border: Border.all(color: Colors.grey[200]!, width: 1),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        repository.name,
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[900],
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 6.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: config.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'View',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: config.primaryColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Icon(
-                        Icons.arrow_forward,
-                        size: 14.sp,
-                        color: config.primaryColor,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }
